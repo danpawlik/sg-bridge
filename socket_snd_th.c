@@ -188,6 +188,9 @@ void socket_snd_th_cleanup(void *app_ptr) {
     app_data_t *app = (app_data_t *)app_ptr;
 
     if (app) {
+        if (app->send_sock != -1) {
+            close(app->send_sock);
+        }
         app->socket_snd_th_running = 0;
     }
 
@@ -207,20 +210,20 @@ void *socket_snd_th(void *app_ptr) {
     case AF_UNIX:
         if (prepare_send_socket_unix(app) == -1) {
             fprintf(stderr, "Failed to create socket... exiting!");
-            return NULL;
+            pthread_exit(NULL);
         }
         break;
 
     case AF_INET:
         if (prepare_send_socket_inet(app) == -1) {
             fprintf(stderr, "Failed to create socket... exiting!");
-            return NULL;
+            pthread_exit(NULL);
         }
         break;
 
     default:
         fprintf(stderr, "Unknown domain type: %d", app->domain);
-        break;
+        pthread_exit(NULL);
     }
 
     clock_gettime(CLOCK_MONOTONIC, &app->rbin->total_t2);
@@ -228,11 +231,6 @@ void *socket_snd_th(void *app_ptr) {
     while (1) {
         pn_rwbytes_t *msg = rb_get(app->rbin);
         decode_message(app, *msg);
-    }
-
-    if (app->send_sock != -1) {
-        close(app->send_sock);
-        fprintf(stdout, "Socket closed\n");
     }
 
     pthread_cleanup_pop(1);

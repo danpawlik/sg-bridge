@@ -153,6 +153,7 @@ int main(int argc, char **argv) {
     app.unix_socket_name = DEFAULT_UNIX_SOCKET_PATH;
     app.domain = AF_UNIX;
     app.socket_flags = MSG_DONTWAIT;
+    app.send_sock = -1;
     app.peer_host = DEFAULT_INET_HOST;
     app.peer_port = DEFAULT_INET_PORT;
     app.ring_buffer_size = atoi(DEFAULT_RING_BUFFER_SIZE);
