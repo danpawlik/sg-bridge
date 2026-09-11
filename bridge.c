@@ -193,13 +193,16 @@ int main(int argc, char **argv) {
         case ARG_GW_INET:
             if (optarg != NULL) {
                 char *matches[4];
+                memset(matches, 0, sizeof(matches));
                 if (match_regex("^([^:]*)(:([0-9]+))*$", matches, 4, optarg) <=
                     0) {
                     fprintf(stderr, "Invalid INET address: %s", optarg);
                     exit(1);
                 }
-                app.peer_host = matches[2];
-                app.peer_port = matches[3];
+                app.peer_host = matches[1];
+                if (matches[3] != NULL) {
+                    app.peer_port = matches[3];
+                }
             }
             app.domain = AF_INET;
             break;
