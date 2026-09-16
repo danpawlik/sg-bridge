@@ -79,7 +79,8 @@ static int prepare_send_socket_inet(app_data_t *app) {
     int port;
 
     if (peer_addrinfo->ai_family == AF_INET6) {
-        struct sockaddr_in6 *sa6 = (struct sockaddr_in6 *)peer_addrinfo->ai_addr;
+        struct sockaddr_in6 *sa6 =
+            (struct sockaddr_in6 *)peer_addrinfo->ai_addr;
         ptr = &sa6->sin6_addr;
         port = ntohs(sa6->sin6_port);
     } else {
